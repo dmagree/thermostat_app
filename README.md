@@ -1,4 +1,4 @@
-#Simple Thermostat App
+# Simple Thermostat App
 
 Basic app for interacting with a thermostat. App uses flask and [Dash](https://dash.plot.ly/) for UI and secures connection via Google OAuth. Thermostat data is stored in a SQLite database. This app is based on several tutorials and example repositories. Here are some useful links:
 
