@@ -3,7 +3,8 @@ import sqlite3
 import requests
 import time
 import os
-dbname = 'thermostat.db'
+dbname = os.environ.get('THERMOSTAT_DB','thermostat.db')
+#print dbname
 
 thermostat_address = os.environ["THERMOSTAT_ADDRESS"]
 
