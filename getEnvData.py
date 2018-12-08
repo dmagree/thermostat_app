@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 import sqlite3
 import requests
-import time
+import datetime, time
 import os
+
+print datetime.datetime.now()
 dbname = os.environ.get('THERMOSTAT_DB','thermostat.db')
 #print dbname
 
@@ -17,8 +19,12 @@ def getEnvData():
 def storeData(temp, hum, desired_temp, is_heating):
 	conn = sqlite3.connect(dbname)
 	curs = conn.cursor()
-	print "saving:", temp, hum, desired_temp, is_heating
-	curs.execute("INSERT INTO DHT_data values(datetime('now'), (?), (?), (?), (?))", 
+	print "saving:" 
+        print "  temp:      ", temp
+        print "  hum:       ", hum
+        print "  des temp:  ", desired_temp 
+        print "  is_heating:", is_heating
+        curs.execute("INSERT INTO DHT_data values(datetime('now'), (?), (?), (?), (?))", 
 		(temp, hum, desired_temp, is_heating))
 	conn.commit()
 	conn.close()
