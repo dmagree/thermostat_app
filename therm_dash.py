@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
@@ -18,7 +19,7 @@ def MyDashApp():
 
 #app = dash.Dash()
 app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"})
-dbname = 'thermostat.db'
+dbname = os.environ["THERMOSTAT_DB"]
 
 
 def getLastDataEntry():
