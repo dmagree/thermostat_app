@@ -29,11 +29,7 @@ class DatabaseInterface():
         self.data = []
 
     def getLatest(self):
-        conn = sqlite3.connect(dbname)
-        curs = conn.cursor()
-        for row in curs.execute("SELECT * FROM DHT_data ORDER BY timestamp DESC LIMIT 1"):
-            out = row
-        return out
+        return self.getNumEntries(1)
 
     def getNumEntries (self, numSamples=0):
         conn = sqlite3.connect(dbname)
@@ -43,14 +39,7 @@ class DatabaseInterface():
         else:
             curs.execute("SELECT * FROM DHT_data ORDER BY timestamp")
         self.data = curs.fetchall()
-        dates = []
-        temps = []
-        hums = []
-        for row in reversed(self.data):
-            dates.append(row[0])
-            temps.append(row[1])
-            hums.append(row[2])
-        return dates, temps, hums
+        return self.transposeLists(self.data)
 
     def getTimeInterval (self, timerange = ("2019-01-05 12:00:00.0", "2019-01-10 12:00:00.0")):
         conn = sqlite3.connect(dbname)
@@ -59,14 +48,13 @@ class DatabaseInterface():
         print cmd
         curs.execute(cmd)
         self.data = curs.fetchall()
-        dates = []
-        temps = []
-        hums = []
-        for row in reversed(self.data):
-            dates.append(row[0])
-            temps.append(row[1])
-            hums.append(row[2])
-        return dates, temps, hums
+        return self.transposeLists(self.data)
+
+    def transposeLists(self, data):
+        out = [ [] for i in self.data[0] ]
+        for row in self.data:
+            [out[i].append(s) for i, s in enumerate(row)]
+        return out
 
 db = DatabaseInterface(dbname)
 numRefresh = 0
@@ -119,7 +107,7 @@ def display_value(value):
     [dash.dependencies.Input('button', 'n_clicks')])
 def update_output(n_clicks):
     out = db.getLatest()
-    return 'Current Temperature: {:0.1f}  °F'.format(out[1])
+    return 'Current Temperature: {:0.1f}  °F'.format(out[1][0])
 
 @app.callback(
     dash.dependencies.Output('temp-history-graph', 'figure'),
