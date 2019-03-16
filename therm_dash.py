@@ -27,6 +27,7 @@ class DatabaseInterface():
     def __init__(self, dbName):
         self.dbName = dbName
         self.data = []
+        self.output = self.getNumEntries(3600)
 
     def getLatest(self):
         return self.getNumEntries(1)
@@ -106,7 +107,8 @@ def display_value(value):
     dash.dependencies.Output('output-container-button', 'children'),
     [dash.dependencies.Input('button', 'n_clicks')])
 def update_output(n_clicks):
-    out = db.getLatest()
+    # out = db.getLatest()
+    out = db.output
     return 'Current Temperature: {:0.1f}  °F'.format(out[1][0])
 
 @app.callback(
@@ -121,11 +123,13 @@ def update_output(n_clicks, relayoutData):
                      "{}".format(relayoutData['xaxis.range[1]']).split('.')[0])
 
         print timerange
-        df = db.getTimeInterval(timerange)
+        # df = db.getTimeInterval(timerange)
+        df = db.output
         # df = db.getTimeInterval()
 
     else:
-        df = db.getNumEntries(3600)
+        # df = db.getNumEntries(3600)
+        df = db.output
 
     return {'data': [{'x': df[0], 'y': df[1], 'type': 'scatter', 'name': 'Temp'},],
             'layout': go.Layout(yaxis={'title': '°F'}) #, xaxis={'range': timerange})
